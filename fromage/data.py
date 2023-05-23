@@ -35,6 +35,9 @@ def get_dataset(args, split: str, tokenizer, precision: str = 'fp32') -> Dataset
     if 'cc3m' in args.dataset:
       dataset_paths.append(os.path.join(args.dataset_dir, 'cc3m_train.tsv'))
       image_data_dirs.append(os.path.join(args.image_dir, 'cc3m/training/'))
+    elif 'CheXpert' in args.dataset:
+      dataset_paths.append(os.path.join(args.dataset_dir, 'CheXpert_train.tsv'))
+      image_data_dirs.append(os.path.join(args.image_dir, 'train/'))
     else:
       raise NotImplementedError
 
@@ -42,6 +45,9 @@ def get_dataset(args, split: str, tokenizer, precision: str = 'fp32') -> Dataset
     if 'cc3m' in args.val_dataset:
       dataset_paths.append(os.path.join(args.dataset_dir, 'cc3m_val.tsv'))
       image_data_dirs.append(os.path.join(args.image_dir, 'cc3m/validation'))
+    if 'CheXpert' in args.val_dataset:
+      dataset_paths.append(os.path.join(args.dataset_dir, 'CheXpert_val.tsv'))
+      image_data_dirs.append(os.path.join(args.image_dir, 'valid'))
     else:
       raise NotImplementedError
 

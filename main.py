@@ -41,7 +41,7 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
 llm_models = ['facebook/opt-125m', 'facebook/opt-350m', 'facebook/opt-1.3b',
               'facebook/opt-2.7b', 'facebook/opt-6.7b', 'facebook/opt-13b', 'facebook/opt-30b',
               'facebook/opt-66b']
-datasets = ['cc3m']
+datasets = ['cc3m', 'CheXpert']
 best_score = 0  # Variable to keep track of best model so far.
 
 

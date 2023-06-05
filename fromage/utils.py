@@ -10,8 +10,10 @@ from transformers import AutoFeatureExtractor
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 import requests
 from io import BytesIO
+from fromage import medclip_fe
 
 import random
+
 
 
 def dump_git_status(out_file=sys.stdout, exclude_file_patterns=['*.ipynb', '*.th', '*.sh', '*.txt', '*.json']):
@@ -110,15 +112,19 @@ def create_image_of_text(text: str, width: int = 224, nrows: int = 2, color=(255
 
 
 def get_feature_extractor_for_model(model_name: str, image_size: int = 224, train: bool = True):
-  print(f'Using HuggingFace AutoFeatureExtractor for {model_name}.')
-  feature_extractor = AutoFeatureExtractor.from_pretrained(model_name)
-  return feature_extractor
+	print(f'Using HuggingFace AutoFeatureExtractor for {model_name}.')
+	if 'swin' in model_name:
+		feature_extractor = medclip_fe.MedCLIPFeatureExtractor()
+	else:
+		feature_extractor = AutoFeatureExtractor.from_pretrained(model_name)
+	return feature_extractor
 
 
 def get_pixel_values_for_model(feature_extractor, img):
   pixel_values = feature_extractor(
-    img.convert('RGB'),
-    return_tensors="pt").pixel_values[0, ...]  # (3, H, W)
+    img, # img.convert('RGB'),
+    return_tensors="pt").pixel_values[0, ...]  # (1, H, W)
+  
   return pixel_values
 
 

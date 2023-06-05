@@ -10,10 +10,13 @@ import pandas as pd
 import torch
 import torchvision.datasets as datasets
 from torchvision import transforms as T
-from PIL import Image, ImageFont
+from PIL import Image, ImageFont, ImageFile
 from torch.utils.data import Dataset
+import pydicom as dicom
 
 from fromage import utils
+
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 
 def collate_fn(batch):
@@ -38,6 +41,9 @@ def get_dataset(args, split: str, tokenizer, precision: str = 'fp32') -> Dataset
     elif 'CheXpert' in args.dataset:
       dataset_paths.append(os.path.join(args.dataset_dir, 'CheXpert_train.tsv'))
       image_data_dirs.append(os.path.join(args.image_dir, 'train/'))
+    elif 'MIMIC' in args.dataset:
+      dataset_paths.append(os.path.join(args.dataset_dir, 'MIMIC_train.tsv'))
+      image_data_dirs.append(args.image_dir)
     else:
       raise NotImplementedError
 
@@ -45,9 +51,12 @@ def get_dataset(args, split: str, tokenizer, precision: str = 'fp32') -> Dataset
     if 'cc3m' in args.val_dataset:
       dataset_paths.append(os.path.join(args.dataset_dir, 'cc3m_val.tsv'))
       image_data_dirs.append(os.path.join(args.image_dir, 'cc3m/validation'))
-    if 'CheXpert' in args.val_dataset:
+    elif 'CheXpert' in args.val_dataset:
       dataset_paths.append(os.path.join(args.dataset_dir, 'CheXpert_val.tsv'))
       image_data_dirs.append(os.path.join(args.image_dir, 'valid'))
+    elif 'MIMIC' in args.val_dataset:
+      dataset_paths.append(os.path.join(args.dataset_dir, 'MIMIC_val.tsv'))
+      image_data_dirs.append(args.image_dir)
     else:
       raise NotImplementedError
 
@@ -107,7 +116,7 @@ class CsvDataset(Dataset):
       caption = str(self.captions[idx])
 
       try:
-        img = Image.open(image_path)
+        img = dicom.dcmread(image_path).pixel_array # Image.open(image_path)
         images = utils.get_pixel_values_for_model(self.feature_extractor, img)
 
         caption += '[RET]'
@@ -130,6 +139,9 @@ class CsvDataset(Dataset):
 
         return image_path, images, cap_img, tokens, caption_len
       except Exception as e:
-        print(f'Error reading {image_path} with caption {caption}: {e}')
+        print(f'Error reading {image_path} with caption {caption}')
+        import traceback
+        traceback.print_tb()
+        print(str(e))
         # Pick a new example at random.
         idx = np.random.randint(0, len(self)-1)

@@ -40,8 +40,8 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
 # Available LLM models.
 llm_models = ['facebook/opt-125m', 'facebook/opt-350m', 'facebook/opt-1.3b',
               'facebook/opt-2.7b', 'facebook/opt-6.7b', 'facebook/opt-13b', 'facebook/opt-30b',
-              'facebook/opt-66b']
-datasets = ['cc3m', 'CheXpert']
+              'facebook/opt-66b', 'microsoft/biogpt', 'microsoft/biogpt-large']
+datasets = ['cc3m', 'CheXpert', 'MIMIC']
 best_score = 0  # Variable to keep track of best model so far.
 
 
@@ -347,10 +347,10 @@ def main_worker(gpu, ngpus_per_node, args):
 
   train_loader = torch.utils.data.DataLoader(
     train_dataset, batch_size=args.batch_size, shuffle=(train_sampler is None),
-    num_workers=args.workers, pin_memory=True, sampler=train_sampler)
+    num_workers=args.workers, pin_memory=True, sampler=train_sampler, drop_last=True)
   val_loader = torch.utils.data.DataLoader(
     val_dataset, batch_size=(args.val_batch_size or args.batch_size), shuffle=False,
-    num_workers=args.workers, pin_memory=True, sampler=val_sampler)
+    num_workers=args.workers, pin_memory=True, sampler=val_sampler, drop_last=True)
 
   if args.evaluate:
     evaluate.validate(val_loader, model, tokenizer, criterion, epoch, args)

@@ -16,7 +16,8 @@ from PIL import Image, UnidentifiedImageError
 
 from transformers import AutoConfig, AutoModel, AutoModelForCausalLM
 from transformers import OPTForCausalLM, GPT2Tokenizer
-from transformers import CLIPVisionModel, CLIPVisionConfig
+from transformers import AutoTokenizer, BioGptForCausalLM
+from transformers import CLIPVisionModel, SwinModel, CLIPVisionConfig
 
 from fromage import utils
 
@@ -24,7 +25,7 @@ from fromage import utils
 class FrozenArgs:
   freeze_lm: bool = True
   freeze_vm: bool = True
-  opt_version: str = 'facebook/opt-6.7b'
+  opt_version: str = 'microsoft/biogpt'
   visual_encoder: str = 'openai/clip-vit-large-patch14'
   n_visual_tokens: int = 1
   image_embed_dropout_prob: float = 0.0
@@ -53,6 +54,8 @@ class FromageModel(nn.Module):
 
     if 'facebook/opt' in opt_version:
       self.lm = OPTForCausalLM.from_pretrained(opt_version)
+    elif 'microsoft/biogpt' in opt_version:
+      self.lm = OPTForCausalLM.from_pretrained(opt_version, use_cache=False)
     else:
       raise NotImplementedError
 
@@ -73,12 +76,14 @@ class FromageModel(nn.Module):
     self.input_embeddings = self.lm.get_input_embeddings()
 
     print("Restoring pretrained weights for the visual model.")
-    if 'clip' in visual_encoder:
+    if 'swin' in visual_encoder:
+      self.visual_model = AutoModel.from_pretrained("./fromage_model/vision_model.bin")
+    elif 'clip' in visual_encoder:
       self.visual_model = CLIPVisionModel.from_pretrained(visual_encoder)
     else:
       self.visual_model = AutoModel.from_pretrained(visual_encoder)
 
-    if 'clip' in visual_encoder:
+    if 'swin' in visual_encoder or 'clip' in visual_encoder:
       hidden_size = self.visual_model.config.hidden_size
     else:
       raise NotImplementedError
@@ -134,7 +139,7 @@ class FromageModel(nn.Module):
       raise ValueError(f'mode should be one of ["caption", "retrieval"], got {mode} instead.')
 
     # Extract visual embeddings from the vision encoder.
-    if 'clip' in self.visual_model_name:
+    if 'swin' in self.visual_model_name or 'clip' in self.visual_model_name:
       outputs = self.visual_model(pixel_values)
       encoder_outputs = outputs.pooler_output
     else:
@@ -612,7 +617,15 @@ def load_fromage(model_dir: str) -> Fromage:
       model_kwargs = json.load(f)
 
   # Initialize tokenizer.
-  tokenizer = GPT2Tokenizer.from_pretrained(model_kwargs['opt_version'])
+  opt_version = args.opt_version
+  if 'facebook/opt' in opt_version:
+    tokenizer = GPT2Tokenizer.from_pretrained(model_kwargs['opt_version'])
+  elif 'microsoft/biogpt' in opt_version:
+    tokenizer = AutoTokenizer.from_pretrained(model_kwargs['opt_version'])
+  else:
+    raise NotImplementedError
+  
+  
   tokenizer.pad_token = tokenizer.eos_token
   # Add special tokens to the model to enable [RET].
   tokenizer.add_special_tokens({"cls_token": "<|image|>"})

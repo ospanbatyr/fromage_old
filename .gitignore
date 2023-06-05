@@ -3,7 +3,9 @@
 __pycache__
 .pytest_cache
 venv
+fromage_model/vision_model.bin/
 runs/
+datasets/
 data/
 .ipynb_checkpoints/
 */.ipynb_checkpoints/

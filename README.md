@@ -14,6 +14,9 @@ This repository hosts the code and model weights for FROMAGe.
 ## Setup instructions
 
 ### Environment
+
+#### Setup Conda Environment
+First, setup the Conda environment with the following code.
 ```
 conda create -n fromage python=3.10
 pip install -r requirements.txt
@@ -23,6 +26,11 @@ pip install git+https://github.com/ildoonet/pytorch-gradual-warmup-lr.git
 pip install pydicom
 pip install sacremoses
 ```
+
+#### Download MIMIC dataset and vision encoder manually
+The dataset and vision encoder are in this [link](https://drive.google.com/drive/u/1/folders/1e8ZTCKvxI57RP4466TQyHpvr74KTI4n6). 
+
+Put `vision_model.bin.tar.gz/` in `fromage_model/` and untar it. Also, put `MIMIC_tsv.tar.gz` under datasets and untar it. Place the `tsv` files just under the datasets path.
 
 ### Pretrained Checkpoints
 

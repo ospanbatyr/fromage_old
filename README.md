@@ -14,6 +14,7 @@ This repository hosts the code and model weights for FROMAGe.
 ## Setup instructions
 
 ### Environment
+```
 conda create -n fromage python=3.10
 pip install -r requirements.txt
 pip install -r requirements-medclip.txt
@@ -21,6 +22,7 @@ pip install torch==1.11.0+cu102 torchvision==0.12.0+cu102 torchaudio==0.11.0 --e
 pip install git+https://github.com/ildoonet/pytorch-gradual-warmup-lr.git
 pip install pydicom
 pip install sacremoses
+```
 
 ### Pretrained Checkpoints
 

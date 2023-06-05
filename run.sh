@@ -50,8 +50,8 @@ echo "Loading Anaconda Module..."
 #module load anaconda/2.7
 #module load cuda/10.2
 #module load cudnn/8.1.1/cuda-10.2
-module load cuda/11.8.0
-module load cudnn/8.2.0/cuda-11.X
+module load cuda/10.2
+module load cudnn/8.1.1/cuda-10.2
 echo "======================="
 
 

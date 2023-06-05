@@ -14,17 +14,13 @@ This repository hosts the code and model weights for FROMAGe.
 ## Setup instructions
 
 ### Environment
-Set up a new virtualenv, and install required libraries:
-```
-python -m venv venv
-source venv/bin/activate
+conda create -n fromage python=3.10
 pip install -r requirements.txt
-```
-
-Add the `fromage` library to PYTHONPATH:
-```
-export PYTHONPATH=$PYTHONPATH:/home/path/to/fromage/
-```
+pip install -r requirements-medclip.txt
+pip install torch==1.11.0+cu102 torchvision==0.12.0+cu102 torchaudio==0.11.0 --extra-index-url https://download.pytorch.org/whl/cu102
+pip install git+https://github.com/ildoonet/pytorch-gradual-warmup-lr.git
+pip install pydicom
+pip install sacremoses
 
 ### Pretrained Checkpoints
 

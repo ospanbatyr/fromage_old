@@ -6,6 +6,7 @@ venv
 fromage_model/vision_model.bin/
 runs/
 datasets/
+*.log/
 data/
 .ipynb_checkpoints/
 */.ipynb_checkpoints/

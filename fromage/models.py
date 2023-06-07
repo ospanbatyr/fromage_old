@@ -364,7 +364,7 @@ class FromageModel(nn.Module):
       output_logits = []
 
       for i in range(max_len):
-        if 'opt' in self.opt_version:
+        if ('opt' in self.opt_version) or ('bio' in self.opt_version):
           output = self.lm(inputs_embeds=embeddings, use_cache=False, output_hidden_states=True)
         else:
           if i == 0:

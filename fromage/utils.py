@@ -112,17 +112,18 @@ def create_image_of_text(text: str, width: int = 224, nrows: int = 2, color=(255
 
 
 def get_feature_extractor_for_model(model_name: str, image_size: int = 224, train: bool = True):
-	print(f'Using HuggingFace AutoFeatureExtractor for {model_name}.')
-	if 'swin' in model_name:
-		feature_extractor = medclip_fe.MedCLIPFeatureExtractor()
-	else:
-		feature_extractor = AutoFeatureExtractor.from_pretrained(model_name)
-	return feature_extractor
+  if 'swin' in model_name:
+    print(f'Using HuggingFace MedCLIPFeatureExtractor for {model_name}.')
+    feature_extractor = medclip_fe.MedCLIPFeatureExtractor()
+  else:
+    print(f'Using HuggingFace AutoFeatureExtractor for {model_name}.')
+    feature_extractor = AutoFeatureExtractor.from_pretrained(model_name)
+  return feature_extractor
 
 
 def get_pixel_values_for_model(feature_extractor, img):
   pixel_values = feature_extractor(
-    img, # img.convert('RGB'),
+    img, # img,
     return_tensors="pt").pixel_values[0, ...]  # (1, H, W)
   
   return pixel_values

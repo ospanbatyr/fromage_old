@@ -104,8 +104,7 @@ class MedCLIPFeatureExtractor(CLIPFeatureExtractor):
                 self.resize(image=image, size=self.size["shortest_edge"], resample=self.resample)
                 for image in images
             ]
-        images = [image.astype(np.float32) for image in images]
-          
+        images = [image.astype(np.float32) / 255 for image in images]
         if self.do_center_crop and self.crop_size is not None:
             images = [self.center_crop(image, self.crop_size) for image in images]
 

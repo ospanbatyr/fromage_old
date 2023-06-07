@@ -33,7 +33,7 @@
 #SBATCH --partition=ai
 #SBATCH --account=ai
 #SBATCH --qos=ai
-#SBATCH --mem=28G
+#SBATCH --mem=36G
 #SBATCH --gres=gpu:tesla_t4:1
 #SBATCH --time=1-12:00:00
 #SBATCH --output=test_%J.log
@@ -71,4 +71,4 @@ echo
 #python -u main.py --dist-backend 'nccl' --world-size 1 --rank 0 --dataset=CheXpert  --val-dataset=CheXpert --opt-version='microsoft/biogpt' --visual-model='microsoft/swin-tiny-patch4-window7-224' --exp_name='fromage_exp' --image-dir='data/'  --log-base-dir='runs/' --batch-size=64  --val-batch-size=64  --learning-rate=0.0003 --precision='fp32' --print-freq=100 --workers=2 --image-dir='/userfiles/oince22/CheXpert/chexpertchestxrays-u20210408/CheXpert-v1.0/CheXpert-v1.0' --max-len=36
 
 # mimic run
-python -u main.py --dist-backend 'nccl' --world-size 1 --rank 0 --dataset=MIMIC  --val-dataset=MIMIC --opt-version='microsoft/biogpt' --visual-model='microsoft/swin-tiny-patch4-window7-224' --exp_name='fromage_exp' --log-base-dir='runs/' --batch-size=16  --val-batch-size=16  --learning-rate=0.0001 --precision='fp32' --print-freq=100 --workers=2 --image-dir='/datasets/mimic/physionet.org/files/mimic-cxr/2.0.0/files' --max-len=100 --epochs=30
+python -u main.py --dist-backend 'nccl' --world-size 1 --rank 0 --dataset=MIMIC  --val-dataset=MIMIC --opt-version='microsoft/biogpt-large' --visual-model='microsoft/swin-tiny-patch4-window7-224' --exp_name='fromage_exp' --log-base-dir='runs/' --batch-size=8  --val-batch-size=8  --learning-rate=0.0003 --precision='fp32' --print-freq=100 --workers=2 --image-dir='/datasets/mimic/physionet.org/files/mimic-cxr/2.0.0/files' --max-len=100 --epochs 30

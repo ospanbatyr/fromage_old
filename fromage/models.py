@@ -55,7 +55,7 @@ class FromageModel(nn.Module):
     if 'facebook/opt' in opt_version:
       self.lm = OPTForCausalLM.from_pretrained(opt_version)
     elif 'microsoft/biogpt' in opt_version:
-      self.lm = OPTForCausalLM.from_pretrained(opt_version, use_cache=False)
+      self.lm = BioGptForCausalLM.from_pretrained(opt_version, use_cache=False)
     else:
       raise NotImplementedError
 

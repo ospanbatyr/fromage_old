@@ -25,7 +25,7 @@ from fromage import utils
 class FrozenArgs:
   freeze_lm: bool = True
   freeze_vm: bool = True
-  opt_version: str = 'microsoft/biogpt'
+  opt_version: str = 'facebook/opt-125m'
   visual_encoder: str = 'openai/clip-vit-large-patch14'
   n_visual_tokens: int = 1
   image_embed_dropout_prob: float = 0.0
